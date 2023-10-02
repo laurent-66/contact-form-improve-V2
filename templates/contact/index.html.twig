@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contact détail{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+  <h2 class="text-center m-5">Contact détail</h2>
+  <div class="container my-4">
+    <div class="row">
+      <div class="col-sm-12 col-md-6 infoContact ">
+        <div class="backgroundComment border border-light bg bg-light p-5">
+          <h4>Nom : <strong> {{ contact.lastName }}</strong></h4>
+          <h4>Prénom :  <strong> {{ contact.firstName }} </strong></h4>
+          <h4>Email : <strong> {{ contact.email }}</strong> </h4>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6 backgroundComment border border-light bg bg-light p-5">
+        <div class="backgroundComment border border-light bg bg-light">
+          <h4 class= "text-success"><strong>Demande répondue : </strong> {{ requestCompleted }}</h3>
+          <h4 class="text-danger"><strong>Demande a faire : </strong> {{ requestToMake }}</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <form action = "{{ path('validation_request', {'id': contact.id })}}"  method="post">
+      <div class="row px-4 form-check">
+
+      {% for item in requestAll %}
+      <div class="row ">
+        <div class="col-11 backgroundComment border border-light bg bg-light px-5 py-3 my-2">
+        {% if item.isValidated %}
+          <input class="form-check-input" type="checkbox"  id="{{item.id}}" name="{{item.id}}" value = "{{item.contentText}}" checked >   
+        {% else %}
+          <input class="form-check-input" type="checkbox" id="{{item.id}}" name="{{item.id}}" value = "{{item.contentText}}" >
+        {% endif %}
+          <label class="form-check-label text-dark" for="question">
+            {{ item.contentText }}
+          </label>
+        </div>
+        {% if item.isValidated %}
+        <div class="stateQuestion col-1 bg bg-success text-light text-center my-2">
+          <span class="d-block">Traité</span> 
+        </div>
+        {% else %}
+        <div class="stateQuestion col-1 bg bg-warning text-center my-2">
+          <span class="d-block">A traiter</span> 
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+
+      </div>
+      <div class="row px-4">
+        <button type="submit" class="btn btn-primary mt-5">valider</button>
+        <a type="button" href="{{path('contact-list')}}" class="btn btn-light border border-dark mt-5 ml-4">Retour à la liste</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

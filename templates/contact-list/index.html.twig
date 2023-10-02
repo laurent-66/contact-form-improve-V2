@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des contacts{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+<div class="row d-flex flex-row justify-content-between">
+  <h2 class=" m-5">Liste des contacts</h2>
+  <a class="btn btn-info my-auto mr-3" href="{{path('app_logout')}}" style="height:40px;">Se déconnecter</a>
+</div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">Prénom</th>
+        <th scope="col">email</th>
+        <th scope="col">Demande traité</th>
+        <th scope="col">Demande total</th>
+        <th scope="col">Action</th>       
+      </tr>
+    </thead>
+    <tbody>
+    {% for contact in contacts %}
+      <tr>
+        <td>{{ contact.lastname }}</td>
+        <td>{{ contact.firstname }}</td>
+        <td>{{ contact.email }}</td>
+        <td>#</td>
+        <td>#</td>
+        <td><a class="btn btn-info" href="{{ path('contact-detail', {'id': contact.id })}}">voir</a></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
