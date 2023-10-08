@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\RequestContactRepository;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: RequestContactRepository::class)]
@@ -18,12 +19,14 @@ class RequestContact
 
     #[ORM\Column(type: Types::TEXT)]
     #[Assert\NotBlank]
+    #[Groups(['getContact'])]
     private ?string $contentText = null;
 
     #[ORM\Column]
     private ?bool $isValidated = false;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Groups(['getContact'])]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]

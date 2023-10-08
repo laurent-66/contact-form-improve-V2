@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ContactRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactRepository::class)]
@@ -22,12 +23,14 @@ class Contact
     #[Assert\NotBlank(
         message: "La valeur ne peut être vide."
     )]
+    #[Groups(['getContact'])]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(
         message: "La valeur ne peut être vide."
     )]
+    #[Groups(['getContact'])]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255)]
@@ -37,6 +40,7 @@ class Contact
     #[Assert\Email(
         message: 'l\'email {{ value }} n\'est pas un email valide.',
     )]
+    #[Groups(['getContact'])]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -45,6 +49,7 @@ class Contact
     #[Assert\NotBlank(
         message: "La question ne peut être vide."
     )]
+    #[Groups(['getContact'])]
     private string $comment;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -54,6 +59,7 @@ class Contact
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\OneToMany(mappedBy: 'contact', targetEntity: RequestContact::class)]
+    #[Groups(['getContact'])]
     private Collection $requestContacts;
 
     public function __construct()
@@ -182,35 +188,4 @@ class Contact
 
         return $this;
     }
-
-
-    public function getContentObject() {
-       $arrayObject = get_object_vars($this);
-       array_shift($arrayObject);
-        $i = 1;
-        while ($i <= 4):
-            array_pop($arrayObject);
-            $i++;
-        endwhile;
-        $arrayPropertiesRequest = $this->arrayPropertiesRequest();
-        $arrayContentObject = [...$arrayObject, ...$arrayPropertiesRequest];
-
-       return  $arrayContentObject;
-    }
-
-
-    public function arrayPropertiesRequest()
-    {
-        $arrayObject = get_object_vars($this);
-        $arrayRequestObject = array_pop($arrayObject);
-        $arraylength = count($arrayRequestObject)-1;
-        $RequestObject = $arrayRequestObject[$arraylength];
-        $arrayPropertiesRequest = [
-            'question'=> $RequestObject->getContentText(),
-            'date_question'=> $RequestObject->getCreatedAt(),
-        ];
-
-        return $arrayPropertiesRequest;
-    }
-
 }
