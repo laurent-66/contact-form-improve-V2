@@ -8,6 +8,7 @@ use App\Entity\RequestContact;
 use App\Service\ExportContactJson;
 use App\Repository\ContactRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\ExportIntegralContactJson;
 use App\Repository\RequestContactRepository;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,13 +22,13 @@ class ContactController extends AbstractController
     private $contactRepository;
     private $requestContactRepository;
     private $exportContactJson;
+    private $exportIntegralContactJson;
 
     public function __construct(
         EntityManagerInterface $entityManager,
         ContactRepository $contactRepository,
         RequestContactRepository $requestContactRepository,
-        ExportContactJson $exportContactJson,
-
+        ExportContactJson $exportContactJson
     ) {
 
         $this->entityManager = $entityManager;
@@ -42,8 +43,8 @@ class ContactController extends AbstractController
         $requestcontact = new RequestContact();
         
         $form = $this->createForm(ContactFormType::class);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
 
             $data = $form->getData();
@@ -63,7 +64,7 @@ class ContactController extends AbstractController
                 $this->entityManager->flush();
                 
                 $pathRegister = $this->getParameter('contact_json__directory');
-                $this->exportContactJson->export($contact, $pathRegister ,$data->getEmail());
+                $this->exportContactJson->export($contact, $pathRegister, $data->getEmail()); 
 
             }else {
 
